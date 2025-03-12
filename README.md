@@ -15,7 +15,7 @@ Ensure you have the following installed:
 ### 1. Clone the repository
 Clone the project from GitHub:
 ```sh
-git clone <repository_url>
+git clone https://github.com/kyawlinntun-gif/backend_api_test.git
 ```
 
 ### 2. Create a database
