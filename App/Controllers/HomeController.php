@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Post;
-
 /**
  * Class HomeController
  * 
@@ -24,11 +22,9 @@ class HomeController
 
     /**
      * Display the home page.
-     *
-     * @return void
      */
-    public function index(): void
+    public function index()
     {
-        // Logic to fetch and display homepage content
+        return view('home');
     }
 }

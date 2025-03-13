@@ -14,5 +14,10 @@ class AuthMiddleware
      *
      * @return void
      */
-    public static function handle() {}
+    public static function handle(array $allowedRoles) {
+        if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], $allowedRoles)) {
+            header("location: /admin/login");
+            exit();
+        }
+    }
 }

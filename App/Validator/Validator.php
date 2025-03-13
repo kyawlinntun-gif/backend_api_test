@@ -2,33 +2,30 @@
 
 namespace App\Validator;
 
-/**
- * Class Validator
- * 
- * A simple validation class for handling form validation rules.
- */
+use App\Validator\Rules;
+
 class Validator
 {
-    /** @var array Holds validation errors */
     private $errors = [];
-    /** @var array Holds input data */
     private $data = [];
+    private $rules;
 
     /**
-     * Validator constructor.
+     * Constructor to initialize validation data.
      *
-     * @param array $data The input data to validate.
+     * @param array $data The imput data to be validated.
      */
     public function __construct(array $data)
     {
         $this->data = $data;
+        $this->rules = new Rules();
     }
 
     /**
-     * Validates the input data based on the given rules.
+     * Validates the input data against the given rules.
      *
-     * @param array $rules An associative array of fields and their validation rules.
-     * @return bool True if validation passes, false otherwise.
+     * @param array $rules An associative array where keys are field names, and values are validation rules separated by "|".
+     * @return boolean Returns true if validation passes, otherwise false.
      */
     public function validate(array $rules): bool
     {
@@ -51,44 +48,57 @@ class Validator
     }
 
     /**
-     * Applies a validation rule to a field.
+     * Applies a specific validation rule to a given field.
      *
-     * @param string $field The field name.
-     * @param string $rule The rule name.
-     * @param string|null $param The optional rule parameter.
-     * @param mixed $value The field value.
+     * @param string $field The field name being validated.
+     * @param string $rule The validation rule name.
+     * @param string|null $param Optional parameter for the rule
+     * @param mixed $value The value being validated.
      * @return void
      */
     public function applyRule(string $field, string $rule, ?string $param, mixed $value): void
     {
+        $error = null;
         switch ($rule) {
+            case 'required':
+                $error = $this->rules->required($value);
+                break;
+            case 'email':
+                $error = $this->rules->email($value);
+                break;
+            case 'string':
+                $error = $this->rules->string($value);
+                break;
+            case 'min':
+                $error = $this->rules->min($value, $param);
+                break;
             default:
                 break;
+        }
+        if ($error) {
+            $this->addError($field, $error);
         }
     }
 
     /**
-     * Adds an error message for a specific field.
+     * Stores validation error messages for a specific field.
      *
-     * @param string $field The field name.
-     * @param string $message The error message.
+     * @param string $field The field name with validation errors.
+     * @param string $message The validation error message.
      * @return void
      */
-    private function addError(string $field, string $message): void
+    public function addError(string $field, string $message): void
     {
-        // Add only if no previous error for the field
         if (!isset($this->errors[$field])) {
             $this->errors[$field] = [];
         }
-
-        // Add error message for the field
         $this->errors[$field][] = $message;
     }
 
     /**
-     * Gets all validation errors.
+     * Retrieves all validation errors.
      *
-     * @return array An associative array of field errors.
+     * @return array An associative array of validation errors.
      */
     public function getErrors(): array
     {

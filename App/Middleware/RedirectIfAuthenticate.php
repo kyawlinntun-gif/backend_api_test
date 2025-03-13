@@ -14,5 +14,11 @@ class RedirectIfAuthenticate
      *
      * @return void
      */
-    public static function handle() {}
+    public static function handle() {
+        if (isset($_SESSION['user_id'])) {
+            // If not, redirect them to the login page
+            header('Location: /');
+            exit();
+        }
+    }
 }

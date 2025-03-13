@@ -1,0 +1,34 @@
+/* Common */
+@font-face {
+  font-family: 'Nunito-Sans';
+  font-weight: 400;
+  src: url('../fonts/NunitoSans-Regular.ttf');
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.outer-width {
+  margin: 0 auto;
+  max-width: 1920px;
+}
+
+.inner-width {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+body {
+  font-family: 'Nunito-Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.active {
+  background-color: #00f;
+  color: #fff;
+}
+/* End Common */

@@ -7,5 +7,9 @@
             "App/Helpers/view_helper.php",
             "config/routes.php"
         ]
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "illuminate/pagination": "^12.2"
     }
 }

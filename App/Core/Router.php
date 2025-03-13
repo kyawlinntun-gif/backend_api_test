@@ -9,15 +9,16 @@ use Exception;
 
 class Router
 {
-    private $routes = [];
+    private $routes = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => []
+    ];
 
     /**
      * Add a route with an optional middleware.
-     *
-     * @param string $method The HTTP method (GET, POST, etc.).
-     * @param string $uri The route URI.
-     * @param string $action The controller and method (e.g., "HomeController@index").
-     * @param array $middleware An array of middleware classes.
      */
     public function add($method, $uri, $action, $middleware = [])
     {
@@ -34,14 +35,19 @@ class Router
 
     /**
      * Dispatch the request to the appropriate controller method.
-     *
-     * @param string $method The HTTP method.
-     * @param string $uri The request URI.
      */
     public function dispatch($method, $uri)
     {
+        // Convert method override if request is sent via POST
+        if ($method === 'POST' && isset($_POST['_method'])) {
+            $method = strtoupper($_POST['_method']);
+        }
+
+        // Remove query string
+        $uri = parse_url($uri, PHP_URL_PATH);
+
         // Check if method exists in routes before looping
-        if (!isset($this->routes[$method]) || !is_array($this->routes[$method])) {
+        if (!isset($this->routes[$method])) {
             http_response_code(404);
             echo "404 Not Found";
             return;
@@ -50,7 +56,7 @@ class Router
         foreach ($this->routes[$method] as $pattern => $route) {
             if (preg_match("#^$pattern$#", $uri, $matches)) {
                 array_shift($matches);
-                $route['params'] = $matches;
+                $route['params'] = array_map(fn($param) => is_numeric($param) ? (int)$param : $param, $matches);
                 $this->applyMiddleware($route['middleware']);
                 return $this->executeAction($route);
             }
@@ -62,8 +68,6 @@ class Router
 
     /**
      * Apply middleware to the route.
-     *
-     * @param array $middleware An array of middleware classes.
      */
     private function applyMiddleware(array $middleware)
     {
@@ -74,25 +78,20 @@ class Router
                 throw new Exception("Middleware {$middlewareClass} not found.");
             }
 
-            // If roles are provided, pass them to the middleware
             is_array($allowedRoles) ? $middlewareClass::handle($allowedRoles) : $middlewareClass::handle();
         }
     }
 
     /**
      * Execute the controller action.
-     *
-     * @param array $route The route configuration.
      */
     private function executeAction(array $route)
     {
-        // Instantiate Request and Response
         $request = new Request();
         $response = new Response();
 
-        // Extract controller and method
         list($controller, $method) = explode('@', $route['action']);
-        $controller = "App\\Controllers\\$controller"; // Ensure proper namespace
+        $controller = "App\\Controllers\\$controller";
 
         if (!class_exists($controller)) {
             throw new Exception("Controller {$controller} not found.");
@@ -104,16 +103,21 @@ class Router
             throw new Exception("Method {$method} not found in {$controller}.");
         }
 
-        // Use Reflection to determine parameter expectations
         $reflection = new ReflectionMethod($controllerInstance, $method);
         $params = $reflection->getParameters();
         $args = [];
 
-        if (count($params) === count($route['params'])) {
-            $args = $route['params'];
-        } elseif (count($params) > 0) {
-            $args = [$request, $response, ...$route['params']];
+        // Ensure correct parameter passing
+        if (count($params) > 0) {
+            if ($params[0]->getType() && $params[0]->getType()->getName() === Request::class) {
+                $args[] = $request;
+            }
+            if (isset($params[1]) && $params[1]->getType() && $params[1]->getType()->getName() === Response::class) {
+                $args[] = $response;
+            }
         }
+
+        $args = array_merge($args, $route['params']);
 
         return $controllerInstance->$method(...$args);
     }

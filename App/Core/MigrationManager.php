@@ -30,7 +30,8 @@ class MigrationManager
         $this->pdo = $pdo;
         $this->migrationPath = $migrationPath ?? __DIR__ . '/../../migrations/';
         $this->migrateFiles = $migrateFiles ?? [
-
+            'createRoleTable.php',
+            'createUserTable.php'
         ];
     }
 

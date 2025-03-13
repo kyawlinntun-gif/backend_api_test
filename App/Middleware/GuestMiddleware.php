@@ -14,5 +14,12 @@ class GuestMiddleware
      *
      * @return void
      */
-    public static function handle() {}
+    public static function handle() {
+        // Check if the user is not logged in
+        if (!isset($_SESSION['user_id'])) {
+            // If not, can't go to logout page 
+            header('Location: /admin/login');
+            exit();
+        }
+    }
 }
