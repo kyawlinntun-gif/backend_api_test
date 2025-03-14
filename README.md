@@ -23,7 +23,7 @@ git clone -b alpha https://github.com/kyawlinntun-gif/backend_api_test.git
 composer install
 ```
 
-### 2. Create a database
+### 3. Create a database
 Create a new database in MySQL (or your preferred database server).  
 Update the `config/config.php` file in the project root to include your database connection settings:
 ```php
@@ -33,7 +33,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 ```
 
-### 3. Migrate the database
+### 4. Migrate the database
 Run the following command to set up and reset the required database tables:
 In scripts' folder
 ```sh
@@ -41,14 +41,14 @@ php migrate_table.php
 php refresh_migrations.php # If you need to delete all data in the database.
 ```
 
-### 4. Run the seeder
+### 5. Run the seeder
 Execute the command below to create the default admin and role:
 In scripts' folder
 ```sh
 php run_seeder.php
 ```
 
-### 5. Serve the application
+### 6. Serve the application
 Start the development server:
 ```sh
 php -S localhost:90 -t public
