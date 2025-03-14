@@ -18,6 +18,11 @@ Clone the project from GitHub using the alpha branch:
 git clone -b alpha https://github.com/kyawlinntun-gif/backend_api_test.git
 ```
 
+### 2. Install Dependencies
+```sh
+composer install
+```
+
 ### 2. Create a database
 Create a new database in MySQL (or your preferred database server).  
 Update the `config/config.php` file in the project root to include your database connection settings:
