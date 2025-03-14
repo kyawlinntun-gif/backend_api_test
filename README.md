@@ -30,6 +30,7 @@ define('DB_PASS', '');
 
 ### 3. Migrate the database
 Run the following command to set up and reset the required database tables:
+In scripts' folder
 ```sh
 php migrate_table.php
 php refresh_migrations.php # If you need to delete all data in the database.
@@ -37,6 +38,7 @@ php refresh_migrations.php # If you need to delete all data in the database.
 
 ### 4. Run the seeder
 Execute the command below to create the default admin and role:
+In scripts' folder
 ```sh
 php run_seeder.php
 ```
@@ -63,3 +65,7 @@ The application will be accessible at [http://localhost:90](http://localhost:90)
 
 ### 1.5 JSONPlaceholder Posts Page 
 #### 1.5.1 Manage JSONPlaceholder Post API data with CRUD operations.
+
+## Debug
+### 1. VPN Errors
+#### 1.1 Sometimes you need vpn or reload the browser to get JSONPlaceholder Api Data.
