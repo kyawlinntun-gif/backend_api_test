@@ -47,7 +47,6 @@ class PostController
 
         // Get the posts from the result
         $posts = $result['data'];
-        // $posts = [];
 
         // Check if there are no posts
         if (empty($posts)) {
@@ -106,7 +105,6 @@ class PostController
 
         // Get the post from the result
         $post = $result['data'];
-        // $post = '';
 
         // Check if there are not exist post
         if (empty($post)) {
@@ -204,7 +202,6 @@ class PostController
 
         // Get the post from the result
         $post = $result['data'];
-        // $post = '';
 
         // Check if there are not exist post
         if (empty($post)) {

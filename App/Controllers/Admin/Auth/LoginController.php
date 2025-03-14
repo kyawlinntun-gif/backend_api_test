@@ -49,7 +49,6 @@ class LoginController
         $validator = new Validator($data);
         // Run validation;
         if (!$validator->validate($rules)) {
-            session_start();
             // Store errors in session
             $_SESSION['errors']['login'] = $validator->getErrors();
             $_SESSION['login']['email'] = $data['email'];
